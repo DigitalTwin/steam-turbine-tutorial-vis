@@ -1,0 +1,69 @@
+<script src="../bower_components/sockjs-client/dist/sockjs.min.js"></script>
+<script src="../bower_components/stomp-websocket/lib/stomp.min.js"></script>
+<script src="../bower_components/papaparse/papaparse.min.js"></script>"
+
+<dom-module id="asset-selector">
+    <template>
+        <px-card header-text='Asset Selection'>
+            <form>
+                <label for="asset-select">Please select an asset:</label>
+                <select id="asset-select" style="width: 300px;" on-change="fetchResultsForAsset">
+                    <option disabled selected></option>
+                    <template is="dom-repeat" items="{{assets}}" sort="compareAssets">
+                        <option value="{{item.assetId}}">{{item.assetName}}</option>
+                    </template>
+                </select>
+            </form>
+        </px-card>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'asset-selector',
+        behaviors: [px.card],
+
+        init: function () {
+            var card = this;
+            this.getData('/api/asset').then(function (assets) {
+                card.assets = assets;
+            }, function (reason) {
+                console.error('encountered error when fetching assets', reason);
+            });
+
+            Stomp.over(new SockJS('/ws/result')).connect({}, function () {
+                this.subscribe('/topic/analyticResults', function (message) {
+                    if (message.body === card.getSelectedAssetId())
+                        card.fetchResultsForAsset();
+                });
+            });
+        },
+
+        compareAssets: function (firstAsset, secondAsset) {
+            return firstAsset.assetName.localeCompare(secondAsset.assetName);
+        },
+
+        getSelectedAssetId: function () {
+            return this.$['asset-select'].value;
+        },
+
+        fetchResultsForAsset: function () {
+            var card = this;
+            this.getData('/api/result/' + this.getSelectedAssetId()).then(
+                function (analyticResults) {
+                    var parsedAnalyticResults = Papa.parse(analyticResults, {
+                        dynamicTyping: true,
+                        skipEmptyLines: true
+                    });
+
+                    card.updateDeck({
+                        "analyticResults": parsedAnalyticResults.data
+                    });
+                },
+                function (error) {
+                    console.error('Encountered error while fetching asset results', error);
+                }
+            );
+        }
+    });
+</script>

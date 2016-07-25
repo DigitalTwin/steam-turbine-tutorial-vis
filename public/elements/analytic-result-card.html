@@ -1,0 +1,42 @@
+<dom-module id="analytic-result">
+    <template>
+        <px-card header-text='Analytic Results'>
+            <px-chart margin="[50,50,30,70]" navigator-disabled legend='{
+                 "enabled": true,
+                 "layout": "horizontal",
+                 "verticalAlign": "top",
+                 "align": "left"
+                 }'>
+                <px-chart-series-line id="expected-temperature-series"
+                                      name="Expected Temperature" axis-id="degrees"></px-chart-series-line>
+                <px-chart-series-line id="actual-temperature-series" name="Actual Temperature"
+                                      axis-id="degrees"></px-chart-series-line>
+                <px-chart-yaxis id="degrees" min="200" max="600" title='{
+                    "text": "Degrees (Fahrenheit)"
+                }'></px-chart-yaxis>
+            </px-chart>
+        </px-card>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'analytic-result',
+        behaviors: [px.card],
+
+        deckStateChanged: function (analyticResults) {
+            this.$['expected-temperature-series'].data = this.convertAnalyticResultsToArray(analyticResults, 1);
+            this.$['actual-temperature-series'].data = this.convertAnalyticResultsToArray(analyticResults, 2);
+        },
+
+        convertAnalyticResultsToArray: function (deckState, resultIndex) {
+            var analyticResultsArray = [];
+
+            $.each(deckState.analyticResults, function (index, analyticResult) {
+                analyticResultsArray.push([analyticResult[0], analyticResult[resultIndex]]);
+            });
+
+            return analyticResultsArray;
+        }
+    });
+</script>

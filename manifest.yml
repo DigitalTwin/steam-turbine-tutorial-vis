@@ -1,0 +1,15 @@
+---
+applications:
+- name: tutorial-vis
+  host: dt-tutorial
+  buildpack: predix_openresty_buildpack
+  path: dist
+  memory: 64M
+  stack: cflinuxfs2
+  services:
+  - tutorial-vis-redis
+  env:
+    UAA_SERVER_URL: https://<YOUR_UAA_INSTANCE_HERE>.predix-uaa.run.aws-usw02-pr.ice.predix.io/check_token
+    # UAA_AUTHORIZATION:
+    REDIS: redis-1
+    # SESSION_SECRET:
