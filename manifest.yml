@@ -12,5 +12,5 @@ applications:
   env:
     UAA_SERVER_URL: https://<YOUR_UAA_INSTANCE_HERE>.predix-uaa.run.aws-usw02-pr.ice.predix.io/check_token
     # UAA_AUTHORIZATION:
-    REDIS: redis-{n}
+    REDIS: redis-<N>
     # SESSION_SECRET:
