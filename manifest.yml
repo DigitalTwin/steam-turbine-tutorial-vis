@@ -1,7 +1,7 @@
 ---
 applications:
 - name: <YOUR_OWN_UNIQUE_PREFIX>-tutorial-vis
-  host: <YOUR_OWN_UNIQUE_PREFIX>-dt-tutorial
+  host: <YOUR_OWN_VIS_APP_PREFIX>-dt-tutorial-vis
   buildpack: predix_openresty_buildpack
   path: dist
   memory: 64M
