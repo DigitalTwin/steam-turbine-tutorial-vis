@@ -9,7 +9,7 @@ applications:
   services:
   - <YOUR_REDIS_SERVICE_NAME>
   env:
-    UAA_SERVER_URL: https://<YOUR_UAA_INSTANCE_HERE>.predix-uaa.run.aws-usw02-pr.ice.predix.io/check_token
+    UAA_SERVER_URL: https://<YOUR_UAA_INSTANCE_HERE>.predix-uaa.run.aws-usw02-pr.ice.predix.io
     # UAA_AUTHORIZATION:
     REDIS: redis-<N>
     # SESSION_SECRET:
